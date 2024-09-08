@@ -83,17 +83,16 @@ def depthFirstSearch(problem):
     understand the search problem that is being passed in:
     """
 
-    goal_reached = False
 
-    def dfsHelp(start_state, problem) :
+    def dfsHelp(start_state, problem, goal_reached) :
 
-        if goal_reached :
-            print("return")
+        if goal_reached[0] == 1 :
+            print("return from if statement")
             return stack
         
         if (problem.isGoalState(start_state)) :
             print("Goal reached")
-            goal_reached = True
+            goal_reached[0] = 1
             return stack
         
         visited.add(start_state)
@@ -101,26 +100,24 @@ def depthFirstSearch(problem):
 
         children = problem.getSuccessors(start_state)
         print(start_state)
-        # if (not children) :
-        #     stack.pop()
-        #     return stack
         for kid in children:
             if kid[0] not in visited :
                 print(kid)
                 stack.push(kid[1])
-                dfsHelp(kid[0], problem)
+                dfsHelp(kid[0], problem, goal_reached)
 
-                if goal_reached :
-                    print("return")
+                if goal_reached[0] == 1:
+                    print("INSIDE FOR LOOP GOAL REACHED")
                     return stack
-                
-                print("POP: ", stack.pop())
+                else:     
+                    print("POP: ", stack.pop())
     
     visited = set()
     actions = list()
     stack = util.Stack()
+    goal_reached = [0]
     
-    dfsHelp(problem.getStartState(), problem)
+    dfsHelp(problem.getStartState(), problem, goal_reached)
     while (not stack.isEmpty()) :
         actions.append(stack.pop())
     print(actions[::-1])
