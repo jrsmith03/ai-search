@@ -81,14 +81,52 @@ def depthFirstSearch(problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
+    goal_reached = False
+
+    def dfsHelp(start_state, problem) :
+
+        if goal_reached :
+            print("return")
+            return stack
+        
+        if (problem.isGoalState(start_state)) :
+            print("Goal reached")
+            goal_reached = True
+            return stack
+        
+        visited.add(start_state)
+        # actions.add(start_state.action)
+
+        children = problem.getSuccessors(start_state)
+        print(start_state)
+        # if (not children) :
+        #     stack.pop()
+        #     return stack
+        for kid in children:
+            if kid[0] not in visited :
+                print(kid)
+                stack.push(kid[1])
+                dfsHelp(kid[0], problem)
+
+                if goal_reached :
+                    print("return")
+                    return stack
+                
+                print("POP: ", stack.pop())
+    
+    visited = set()
+    actions = list()
+    stack = util.Stack()
+    
+    dfsHelp(problem.getStartState(), problem)
+    while (not stack.isEmpty()) :
+        actions.append(stack.pop())
+    print(actions[::-1])
+    return actions[::-1]
+
+    
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
