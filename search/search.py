@@ -107,7 +107,6 @@ def depthFirstSearch(problem):
                 dfsHelp(kid[0], problem, goal_reached)
 
                 if goal_reached[0] == 1:
-                    print("INSIDE FOR LOOP GOAL REACHED")
                     return stack
                 else:     
                     print("POP: ", stack.pop())
@@ -127,12 +126,97 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = list()
+    queue = util.Queue()
+    actions = list()
 
+    start = problem.getStartState()
+    visited.append(start)
+    queue.push(start)
+    previous = None
+    while not queue.isEmpty() :
+        cur = queue.pop()
+        print("cura: ",cur)
+        if problem.isGoalState(cur) :
+            print("Goal reached")
+            break
+        children = problem.getSuccessors(cur) 
+        for neighbor in children :
+            print("neighbor: ", neighbor)
+            if neighbor[0] not in visited :
+                print("prev: ", previous)
+                print("cur: ", cur)
+
+                
+                if previous and neighbor[0] in problem.getSuccessors(previous): 
+                    visited.append(neighbor[0])
+                    queue.push(neighbor[0])
+                    actions.append(neighbor)
+                    previous = cur
+                elif not previous : 
+                    visited.append(neighbor[0])
+                    queue.push(neighbor[0])
+                    actions.append(neighbor)
+                    previous = cur
+    ractions = actions[::-1]
+
+    # prev = ractions[0]
+    # for action in ractions :
+    #     if (action != prev) :
+    #         childrens = problem.getSuccessors(action[0])
+    #         print("prev: ", prev)
+    #         if prev not in childrens :
+    #             print("Remove action", action)
+    #             ractions.remove(action)
+    #         else :
+    #             prev = action
+
+    print(actions[::-1])
+    retlist = []
+    for a in actions :
+        retlist.append(a[1])
+    print(retlist[::-1])
+    return retlist[::-1]
+    return actions[::-1]
+
+ 
+# Dijkstra's algorithm
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    def ucs_init(cur) :
+        if cur in logged :
+            return None
+        
+        child = problem.getSuccessors(cur)
+        if not child or cur in logged :
+            return None
+        logged.append(cur)
+        
+        for c in child :
+            dij_queue.push(c, 10000) 
+            ucs_init(c[0])
+
+    dij_queue = util.PriorityQueue()
+    visited = list()
+    logged = list()
+
+    cur = problem.getStartState()
+    ucs_init(cur)
+        
+    prev = None
+    while not dij_queue.isEmpty() :
+        cur = dij_queue.pop()
+        print("CUR: ", cur)
+        if problem.isGoalState(cur[0]) :
+            print("Goal reached")
+            break
+        children = problem.getSuccessors(cur[0]) 
+        for neighbor in children :
+            dij_queue.update(neighbor, priority(cur) + cost(neighbor))
+
+    return logged
+            
 
 def nullHeuristic(state, problem=None):
     """
