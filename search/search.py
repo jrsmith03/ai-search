@@ -121,75 +121,36 @@ def depthFirstSearch(problem):
     
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-
-    # def ucs_init(cur) :
-    #     if cur in logged :
-    #         return None
-    #     print("cur: ", cur, "; is goal? ", problem.isGoalState(cur))
-    #     child = problem.getSuccessors(cur)
-    #     if not child or cur in logged :
-    #         return None
-    #     logged.append(cur)
-        
-    #     for c in child :
-    #         ucs_init(c[0])
-    
-    # logged = list()
-
-    # cur = problem.getStartState()
-    # ucs_init(cur)
-    # print(logged)
-
-    visited = list()
+    # Initialize visited set and queue
+    visited = set()  # Use a set for faster membership checks
     queue = util.Queue()
-    bfs_res = list()
 
+    # Start state of the problem
     start = problem.getStartState()
-    queue.push(start)
-    goal_pending = True
-    while not queue.isEmpty() and goal_pending:
-        cur = queue.pop()
-        print("examine: ",cur)
-        if problem.isGoalState(cur) :
-            goal_pending = False
-            print("Goal reached")
-            break
-        if cur not in visited : 
-            visited.append(cur)
-          
-            children = problem.getSuccessors(cur) 
-            for neighbor in children :
-                if neighbor[0] not in visited :
-                    print("     expand: ", neighbor[0])
-                    if problem.isGoalState(neighbor[0]) :
-                        goal_pending = False
-                        print("Goal reached")
-                        break
-                    queue.push(neighbor[0])
-                    bfs_res.append(neighbor)
 
-    rev_bfs_res = bfs_res[::-1]
+    # Push the start state into the queue with an empty path
+    queue.push((start, []))
 
-    prev = rev_bfs_res[0]
-    actions = list()
-    # actions.append(prev)
-    # print(rev_bfs_res)
-    for action in rev_bfs_res :
-        if (action != prev) :
-            childrens = problem.getSuccessors(action[0])
-            # print("prev: ", prev)
-            # print("     action: ", action)
-            if prev in childrens :
-                prev = action
-                actions.append(action)
+    while not queue.isEmpty():
+        # Pop the front of the queue
+        current_state, path = queue.pop()
 
-    print(actions[::-1])
-    retlist = []
-    for a in actions :
-        retlist.append(a[1])
-    print(retlist[::-1])
-    return retlist[::-1]
+        # Check if we have reached the goal state
+        if problem.isGoalState(current_state):
+            return path  # Return the path to reach the goal
+
+        # If the state has not been visited, explore its successors
+        if current_state not in visited:
+            visited.add(current_state)  # Mark it as visited
+
+            # Get all successors (neighboring states)
+            for next_state, action, _ in problem.getSuccessors(current_state):
+                if next_state not in visited:
+                    # Push the successor and the path to it into the queue
+                    queue.push((next_state, path + [action]))
+
+    return []  # Return an empty list if no solution is found
+
 
  
 # Dijkstra's algorithm
