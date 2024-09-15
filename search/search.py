@@ -121,87 +121,31 @@ def depthFirstSearch(problem):
     
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    # Initialize visited set and queue
-    visited = set()  # Use a set for faster membership checks
+    visited = set()  
     queue = util.Queue()
 
-    # Start state of the problem
     start = problem.getStartState()
-
-    # Push the start state into the queue with an empty path
     queue.push((start, []))
 
     while not queue.isEmpty():
-        # Pop the front of the queue
         current_state, path = queue.pop()
 
-        # Check if we have reached the goal state
         if problem.isGoalState(current_state):
-            return path  # Return the path to reach the goal
+            return path  
 
-        # If the state has not been visited, explore its successors
         if current_state not in visited:
-            visited.add(current_state)  # Mark it as visited
+            visited.add(current_state)
 
-            # Get all successors (neighboring states)
             for next_state, action, _ in problem.getSuccessors(current_state):
                 if next_state not in visited:
-                    # Push the successor and the path to it into the queue
                     queue.push((next_state, path + [action]))
 
-    return []  # Return an empty list if no solution is found
-
-
+    return []  
  
 # Dijkstra's algorithm
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    # def ucs_init(cur) :
-
-    #     if cur in logged :
-    #         return None
-        
-    #     child = problem.getSuccessors(cur)
-    #     if not child or cur in logged :
-    #         return None
-    #     logged.append(cur)
-        
-    #     for c in child :
-    #         working_queue.push(c[0], float('inf')) 
-    #         ucs_table[c[0]] = float('inf')
-    #         ucs_init(c[0])
-
-    # working_queue = util.PriorityQueue()
-
-    # visited = set()
-
-    # cur = problem.getStartState()
-    # ucs_init(cur)
-    # ucs_table[cur] = 0
-    # working_queue.update(cur, 0)
-    # print(ucs_table)
-        
-    # while not working_queue.isEmpty() :
-    #     cur = working_queue.pop()
-    #     print("CUR: ", cur)
-    #     if problem.isGoalState(cur) :
-    #         print("Goal reached")
-
-    #         break
-    #     children = problem.getSuccessors(cur) 
-    #     if cur not in visited :
-    #         visited.add(cur)
-    #         for neighbor in children :
-    #             print(neighbor)
-    #             new_cost = ucs_table[cur] + ucs_table[neighbor[0]]
-    #             print(new_cost)
-    #             if (ucs_table[neighbor[0]][1] < new_cost) :
-    #                 working_queue.update(neighbor, new_cost)
-    #                 ucs_table.update(neighbor, new_cost)
-    # for key in ucs_table :
-    #     print (ucs_table[key])
-    # return logged
     frontier = util.PriorityQueue()
     frontier.push((problem.getStartState(), [], 0),0)
     visited = set()
